@@ -1,23 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Sign In</h1>
-  <form method="POST" action="{{ url_for('login') }}">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{ form.username.label(class="form-control-label") }}
-      {{ form.username(class="form-control") }}
+  <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card login-container">
+      <div class="card-body">
+        <h5 class="card-title text-center">Crypto-V 登录</h5>
+        <form method="POST" action="{{ url_for('login') }}">
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            <div class="d-flex justify-content-center">
+              <div class="input-container">
+                {{ form.account.label(class="form-control-label") }}
+                {{ form.account(class="form-control", required=True) }} <!-- 添加 required 属性 -->
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="d-flex justify-content-center">
+              <div class="input-container">
+                {{ form.password.label(class="form-control-label") }}
+                {{ form.password(class="form-control", required=True) }} <!-- 添加 required 属性 -->
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-check d-flex justify-content-center">
+            <div class="input-container d-flex align-items-center">
+              {{ form.remember_me(class="form-check-input") }}
+              {{ form.remember_me.label(class="form-check-label ml-2") }}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="d-flex justify-content-center">
+              <div class="button-container">
+                {{ form.submit(class="btn btn-primary btn-block") }}
+              </div>
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <a href="{{ url_for('register') }}" class="btn btn-link">注册</a>
+            <a href="#" class="btn btn-link">忘记密码</a>
+          </div>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alert-container">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} text-center mt-3">{{ message }}</div> <!-- 使用 Bootstrap 的 alert 样式 -->
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
     </div>
-    <div class="form-group">
-      {{ form.password.label(class="form-control-label") }}
-      {{ form.password(class="form-control") }}
-    </div>
-    <div class="form-group form-check">
-      {{ form.remember_me(class="form-check-input") }}
-      {{ form.remember_me.label(class="form-check-label") }}
-    </div>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-primary") }}
-    </div>
-  </form>
+  </div>
 {% endblock %}

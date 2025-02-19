@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('bootstrap.static', filename='css/bootstrap.min.css') }}">
+    <title>测试数据库连接</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-5">测试数据库连接</h1>
+      <p>{{ message }}</p>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('bootstrap.static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+</html>

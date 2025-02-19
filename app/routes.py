@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.models import User, Group, Role, UserGroup
 from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlparse
+from sqlalchemy import text
 
 @app.route('/')
 @app.route('/index')
@@ -17,16 +18,16 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(account=form.account.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('账号或密码无效')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='登录', form=form)
 
 @app.route('/logout')
 def logout():
@@ -39,32 +40,19 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username=form.username.data, email=form.email.data, account=form.account.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('恭喜你，你现在是注册用户了！')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='注册', form=form)
 
-@app.route('/user_management')
-@login_required
-def user_management():
-    users = User.query.all()
-    return render_template('user_management.html', title='User Management', users=users)
-
-@app.route('/group_management')
-@login_required
-def group_management():
-    groups = Group.query.all()
-    return render_template('group_management.html', title='Group Management', groups=groups)
-
-@app.route('/algorithm_display')
-@login_required
-def algorithm_display():
-    return render_template('algorithm_display.html', title='Algorithm Display')
-
-@app.route('/password_evaluation')
-@login_required
-def password_evaluation():
-    return render_template('password_evaluation.html', title='Password Evaluation')
+@app.route('/test_db')
+def test_db():
+    try:
+        # 测试数据库连接
+        db.session.execute(text('SELECT 1'))
+        return render_template('test_db.html', message='数据库连接成功！')
+    except Exception as e:
+        return render_template('test_db.html', message=f'数据库连接失败：{e}')
