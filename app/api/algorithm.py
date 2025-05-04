@@ -138,10 +138,24 @@ def rsa_algorithm(data):
     steps.append({'action': '计算私钥 d', 'data': 'e⁻¹ mod φ(n)', 'color': '#2ecc71', 'parent': 'result_e', 'id': 'calc_d'})
     steps.append({'action': '计算结果 d', 'data': f'{d}', 'color': '#f1c40f', 'parent': 'calc_d', 'id': 'result_d'})
 
-    # 6. 密钥导出阶段（蓝色模块）
-    steps.append({'action': '导出公钥', 'data': f'(e,n)=({e},{n})', 'color': '#3498db', 'parent': 'result_d', 'position': 'left', 'id': 'pub_key'})
-    steps.append({'action': '导出私钥', 'data': f'(d,n)=({d},{n})', 'color': '#3498db', 'parent': 'result_d', 'position': 'right', 'id': 'priv_key'})
+    # 确保以下步骤的 parent 字段正确指向 result_d
+    steps.append({
+        'action': '导出公钥', 
+        'data': f'(e,n)=({e},{n})', 
+        'color': '#3498db', 
+        'parent': 'result_d',  # 必须指向计算d结果的模块ID
+        'position': 'left', 
+        'id': 'pub_key'
+    })
 
+    steps.append({
+        'action': '导出私钥', 
+        'data': f'(d,n)=({d},{n})', 
+        'color': '#3498db', 
+        'parent': 'result_d',  # 必须指向计算d结果的模块ID
+        'position': 'right', 
+        'id': 'priv_key'
+    })
     # 7. 加密阶段（红色父模块）
     steps.append({'action': '准备加密数据', 'data': f'原始数据: {data}', 'color': '#e74c3c', 'parent': 'pub_key', 'id': 'prepare_encrypt'})
 

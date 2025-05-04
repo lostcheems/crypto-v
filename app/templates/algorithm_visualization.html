@@ -838,19 +838,71 @@ let currentSteps = [];
         }
     };
 
-    // 创建模块
-    const createModule = (x, y, text, isActive = false, color = '#4a90e2') => {
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        group.setAttribute('class', 'draggable-module');
-        group.setAttribute('transform', `translate(${x}, ${y})`); // 设置模块的初始位置
 
-        // 动态计算模块大小
+    // 新增辅助函数：检测模块是否重叠
+    const isOverlapping = (newX, newY, newWidth, newHeight, existingModule) => {
+        const existingX = parseFloat(existingModule.getAttribute('transform').match(/translate\(([^,]+)/)[1]);
+        const existingY = parseFloat(existingModule.getAttribute('transform').match(/,\s*([^)]+)/)[1]);
+        const existingWidth = parseFloat(existingModule.querySelector('rect').getAttribute('width'));
+        const existingHeight = parseFloat(existingModule.querySelector('rect').getAttribute('height'));
+
+        return !(
+            newX + newWidth + 10 < existingX ||  // 新模块在旧模块左侧（+10px间距）
+            newX > existingX + existingWidth + 10 ||  // 新模块在旧模块右侧
+            newY + newHeight + 10 < existingY ||  // 新模块在旧模块上方
+            newY > existingY + existingHeight + 10  // 新模块在旧模块下方
+        );
+    };
+
+    // 创建模块
+    // 修改后的 createModule 函数
+    const createModule = (x, y, text, isActive = false, color = '#4a90e2') => {
+        // 动态计算模块大小（保持不变）
         const maxCharsPerLine = 15;
         const lines = text.match(new RegExp(`.{1,${maxCharsPerLine}}`, 'g')) || [];
         const totalLines = lines.length;
         const lineHeight = 16;
-        const moduleWidth = Math.max(120, maxCharsPerLine * 8); // 动态宽度
-        const moduleHeight = Math.max(60, totalLines * lineHeight + 20); // 动态高度
+        const moduleWidth = Math.max(120, maxCharsPerLine * 8);
+        const moduleHeight = Math.max(60, totalLines * lineHeight + 20);
+
+        // 碰撞检测（新增逻辑）
+        let adjustedX = x;
+        let adjustedY = y;
+        let attempts = 0;
+        const maxAttempts = 100;
+        const stepSize = 30;
+
+        // 获取所有现有模块
+        const existingModules = Array.from(document.querySelectorAll('.draggable-module'));
+
+        // 检查并调整位置
+        while (attempts < maxAttempts) {
+            let collision = false;
+            
+            for (const module of existingModules) {
+                if (isOverlapping(adjustedX, adjustedY, moduleWidth, moduleHeight, module)) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (!collision) break;
+
+            // 如果碰撞，沿对角线方向移动
+            adjustedX += stepSize;
+            adjustedY += stepSize;
+            attempts++;
+        }
+
+        // 如果经过调整后仍然碰撞，强制放在原始位置（但添加警告）
+        if (attempts >= maxAttempts) {
+            console.warn(`无法为模块 "${text}" 找到合适位置，可能画布空间不足`);
+        }
+
+        // 创建模块（使用调整后的坐标）
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'draggable-module');
+        group.setAttribute('transform', `translate(${adjustedX}, ${adjustedY})`);
 
         // 创建矩形模块
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -885,23 +937,21 @@ let currentSteps = [];
         group.appendChild(textElement);
         canvas.appendChild(group);
 
-        // 初始化模块数据
-        const module = {
-            group,
-            centerX: x + moduleWidth / 2,
-            centerY: y + moduleHeight / 2,
-            width: moduleWidth,
-            height: moduleHeight,
-            lines: [], // 初始化逻辑线条数组
-            previousModule: null, // 上一步模块
-            nextModule: null, // 下一步模块
-        };
-
-        // 将模块数据存储在 DOM 节点上
-        group.__data__ = module;
-
-        return module;
+        // 初始化模块数据时记录最终位置
+    const module = {
+        group,
+        centerX: adjustedX + moduleWidth / 2,
+        centerY: adjustedY + moduleHeight / 2,
+        width: moduleWidth,
+        height: moduleHeight,
+        lines: [],
+        previousModule: null,
+        nextModule: null
     };
+
+    group.__data__ = module;
+    return module;
+};
 
     // 更新模块的逻辑线条
     const updateLines = (module) => {
@@ -942,6 +992,7 @@ let currentSteps = [];
     };
 
     // 执行步骤
+    // 修改后的 executeSteps 函数核心逻辑（添加模块ID映射和父级连接处理）
     const executeSteps = () => {
         if (currentStep >= currentSteps.length) {
             document.getElementById('status-indicator').className = 'badge bg-success';
@@ -952,73 +1003,69 @@ let currentSteps = [];
         const step = currentSteps[currentStep];
         const totalSteps = currentSteps.length;
 
-        // 基础位置参数
-        const baseX = 100;
-        const baseY = 100;
-        const rowHeight = 120;
-        const colWidth = 200;
+        // 修改基础位置计算逻辑（增加随机偏移避免直线堆叠）
+        const baseX = 100 + Math.random() * 20; // 添加0-20px随机偏移
+        const baseY = 100 + Math.random() * 20;
+        const rowHeight = 120 + Math.random() * 30; // 添加行高变化
+        const colWidth = 200 + Math.random() * 40; // 添加列宽变化
 
-        // 计算模块位置
-        let x = baseX + Math.floor(currentStep / 3) * colWidth;
-        let y = baseY + (currentStep % 3) * rowHeight;
+        // 计算模块位置时加入噪声
+        let x = baseX + Math.floor(currentStep / 3) * colWidth + (Math.random() * 20 - 10);
+        let y = baseY + (currentStep % 3) * rowHeight + (Math.random() * 20 - 10);
 
         // 处理特殊位置要求
         if (step.position === 'left') {
-            x -= 80; // 向左偏移
+            x -= 80;
         } else if (step.position === 'right') {
-            x += 80; // 向右偏移
+            x += 80;
         }
 
-        // 对于并排显示的步骤，调整 y 坐标使其对齐
-        if (currentStep > 0 && currentSteps[currentStep - 1].position) {
-            y = lastModulePosition.centerY; // 保持与前一个模块相同的 y 坐标
-        }
-
-        // 创建模块
+        // 创建当前模块
         const currentModule = createModule(x, y, `${step.action}\n${step.data}`, true, step.color);
 
-        // 连接逻辑
-        if (lastModulePosition) {
-            // 对于并排显示的模块，连接到它们共同的父模块
-            if (step.position) {
-                const parentStepIndex = currentSteps.findIndex(
-                    (s, index) => !s.position && index < currentStep
-                );
-                if (parentStepIndex !== -1) {
-                    const parentModule = moduleCenters[parentStepIndex];
-                    createLine(
-                        parentModule.centerX,
-                        parentModule.centerY,
-                        currentModule.centerX,
-                        currentModule.centerY,
-                        parentModule,
-                        currentModule
-                    );
-                }
-            } else {
-                // 普通情况连接到上一个模块
+        // 存储模块ID映射（新增关键代码）
+        if (step.id) {
+            moduleIdMap[step.id] = currentModule;
+        }
+
+        // 处理模块连接关系（修改关键代码）
+        if (step.parent) {
+            const parentModule = moduleIdMap[step.parent];
+            if (parentModule) {
                 createLine(
-                    lastModulePosition.centerX,
-                    lastModulePosition.centerY,
+                    parentModule.centerX,
+                    parentModule.centerY,
                     currentModule.centerX,
                     currentModule.centerY,
-                    lastModulePosition,
+                    parentModule,
                     currentModule
                 );
             }
+        } else if (lastModulePosition && !step.position) {
+            // 默认线性连接（保留原有逻辑）
+            createLine(
+                lastModulePosition.centerX,
+                lastModulePosition.centerY,
+                currentModule.centerX,
+                currentModule.centerY,
+                lastModulePosition,
+                currentModule
+            );
         }
 
-        // 更新上一个模块的位置
+        // 更新状态
         lastModulePosition = currentModule;
-        moduleCenters[currentStep] = currentModule; // 存储模块中心位置
-
+        moduleCenters[currentStep] = currentModule;
         currentStep++;
-
+        
         if (!isPaused) {
             const animationSpeed = parseInt(document.getElementById('animation-speed').value, 10);
             animationInterval = setTimeout(executeSteps, animationSpeed);
         }
     };
+
+    // 在文件顶部添加模块ID映射（新增）
+    let moduleIdMap = {};
 
     // 生成算法步骤
     const generateAlgorithmSteps = (algorithm) => {

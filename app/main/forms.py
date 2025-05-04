@@ -52,7 +52,6 @@ class EditProfileAdminForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('标题', validators=[DataRequired(), Length(1, 128)])  # 添加标题字段
-    image_url = StringField('图片 URL', validators=[Length(0, 256)])  # 添加图片 URL 字段
     body = PageDownField('内容', validators=[DataRequired()])
     submit_preview = SubmitField('预览')  # 添加预览按钮
     submit_save = SubmitField('保存')  # 添加保存按钮

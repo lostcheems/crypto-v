@@ -124,28 +124,55 @@ def edit(id):
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
-        post.title = form.title.data
-        post.image_url = form.image_url.data
         post.body = form.body.data
-        if form.submit_preview.data:
-            flash('预览模式：文章未保存。')
-            return render_template('edit_post.html', form=form, post=post, preview=True)
-        elif form.submit_save.data:
-            db.session.add(post)
-            db.session.commit()
-            flash('文章已保存。')
-            return redirect(url_for('.edit', id=post.id))
-        elif form.submit_publish.data:
-            db.session.add(post)
-            db.session.commit()
-            flash('文章已发布。')
-            return redirect(url_for('.post', id=post.id))
-    form.title.data = post.title
-    form.image_url.data = post.image_url
+        db.session.add(post)
+        db.session.commit()
+        flash('文章已更新。')
+        return redirect(url_for('.post', id=post.id))
     form.body.data = post.body
-    return render_template('edit_post.html', form=form, post=post)
+    return render_template('edit_post.html', form=form)
+
+@main.route('/delete-post/<int:id>', methods=['GET'])
+@login_required
+def delete_post(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and not current_user.can(Permission.ADMIN):
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('文章已删除。')
+    return redirect(url_for('.manage_posts'))
+
+@main.route('/manage-posts', methods=['GET'])
+@login_required
+def manage_posts():
+    page = request.args.get('page', 1, type=int)
+    if current_user.can(Permission.ADMIN):
+        # 管理员可以管理所有文章
+        pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+            error_out=False)
+    else:
+        # 普通用户只能管理自己的文章
+        pagination = current_user.posts.order_by(Post.timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+            error_out=False)
+    posts = pagination.items
+    return render_template('manage_posts.html', posts=posts, pagination=pagination)
 
 
+@main.route('/new-post', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.body.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('文章已发布。')
+        return redirect(url_for('.manage_posts'))
+    return render_template('edit_post.html', form=form)
+    
 @main.route('/follow/<username>')
 @login_required
 @permission_required(Permission.FOLLOW)
