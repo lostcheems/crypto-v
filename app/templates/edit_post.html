@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}编辑文章{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>编辑文章</h1>
+</div>
+<div>
+    {{ wtf.form_field(form.title) }}
+    {{ wtf.form_field(form.image_url) }}
+    {{ wtf.form_field(form.body) }}
+    <div class="d-flex gap-2">
+        {{ wtf.form_field(form.submit_preview, class_="btn btn-secondary") }}
+        {{ wtf.form_field(form.submit_save, class_="btn btn-primary") }}
+        {{ wtf.form_field(form.submit_publish, class_="btn btn-success") }}
+    </div>
+</div>
+{% if preview %}
+<div class="mt-4">
+    <h2>{{ form.title.data }}</h2>
+    <h6 class="text-muted">作者：{{ current_user.username }}</h6>
+    {% if form.image_url.data %}
+    <img src="{{ form.image_url.data }}" alt="文章图片" class="img-fluid d-block mx-auto my-3">
+    {% endif %}
+    <div class="post-body">
+        {{ form.body.data | safe }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

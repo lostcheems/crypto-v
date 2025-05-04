@@ -1,0 +1,7 @@
+<p>亲爱的 {{ user.username }}，</p>
+<p>要确认您的新邮箱地址，请<a href="{{ url_for('auth.change_email', token=token, _external=True) }}">点击这里</a>。</p>
+<p>或者，您可以将以下链接粘贴到浏览器的地址栏中：</p>
+<p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
+<p>此致，</p>
+<p>Crypto_VIZ</p>
+<p><small>注意：此邮箱地址不接受回复。</small></p>

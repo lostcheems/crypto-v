@@ -1,0 +1,282 @@
+.profile-thumbnail {
+    position: absolute;
+}
+.profile-header {
+    min-height: 260px;
+    margin-left: 280px;
+}
+div.post-tabs {
+    margin-top: 16px;
+}
+ul.posts {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+    border-top: 1px solid #e0e0e0;
+}
+div.post-tabs ul.posts {
+    margin: 0px;
+    border-top: none;
+}
+ul.posts li.post {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+ul.posts li.post:hover {
+    background-color: #f0f0f0;
+}
+div.post-date {
+    float: right;
+}
+div.post-author {
+    font-weight: bold;
+}
+div.post-thumbnail {
+    position: absolute;
+}
+div.post-content {
+    margin-left: 48px;
+    min-height: 48px;
+}
+div.post-footer {
+    text-align: right;
+}
+ul.comments {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+}
+ul.comments li.comment {
+    margin-left: 32px;
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+ul.comments li.comment:nth-child(1) {
+    border-top: 1px solid #e0e0e0;
+}
+ul.comments li.comment:hover {
+    background-color: #f0f0f0;
+}
+div.comment-date {
+    float: right;
+}
+div.comment-author {
+    font-weight: bold;
+}
+div.comment-thumbnail {
+    position: absolute;
+}
+div.comment-content {
+    margin-left: 48px;
+    min-height: 48px;
+}
+div.comment-form {
+    margin: 16px 0px 16px 32px;
+}
+div.pagination {
+    width: 100%;
+    text-align: right;
+    padding: 0px;
+    margin: 0px;
+}
+div.flask-pagedown-preview {
+    margin: 10px 0px 10px 0px;
+    border: 1px solid #e0e0e0;
+    padding: 4px;
+}
+div.flask-pagedown-preview h1 {
+    font-size: 140%;
+}
+div.flask-pagedown-preview h2 {
+    font-size: 130%;
+}
+div.flask-pagedown-preview h3 {
+    font-size: 120%;
+}
+.post-body h1 {
+    font-size: 140%;
+}
+.post-body h2 {
+    font-size: 130%;
+}
+.post-body h3 {
+    font-size: 120%;
+}
+.table.followers tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+#sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #ddd;
+    padding: 15px;
+    height: 100%;
+    transition: opacity 0.3s ease;
+}
+#main-content {
+    padding: 15px;
+}
+#visualization-container {
+    position: relative;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-height: 300px; /* 设置最小高度 */
+    min-width: 400px; /* 设置最小宽度 */
+    resize: none; /* 禁用默认的浏览器拉伸行为 */
+    overflow: hidden;
+}
+
+/* 拉伸角标样式 */
+#resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    cursor: se-resize; /* 设置鼠标为拉伸样式 */
+    border-top: 2px solid #ccc;
+    border-left: 2px solid #ccc;
+    z-index: 10;
+}
+
+#resize-handle:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#sidebar-container {
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+#sidebar-container.collapsed {
+    width: 50px; /* 收缩后的宽度 */
+}
+
+#sidebar-container.collapsed #sidebar {
+    opacity: 0; /* 收缩时隐藏内容 */
+    pointer-events: none; /* 禁用交互 */
+}
+
+#toggle-sidebar {
+    position: absolute;
+    top: 10px;
+    right: -25px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#toggle-sidebar:hover {
+    transform: scale(1.1); /* 鼠标悬停时放大按钮 */
+}
+
+.post img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.post h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.post h6 {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+/* 算法控制台样式 */
+#algorithm-console {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+#algorithm-select {
+    background: #e9ecef;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+}
+
+#run-algorithm {
+    transition: transform 0.2s ease;
+    background: #4a90e2;
+    border: none;
+    padding: 10px;
+}
+
+#run-algorithm:hover {
+    transform: translateY(-2px);
+    background: #357abd;
+}
+
+/* 逻辑线条样式 */
+.logic-line {
+    stroke: #2c3e50;
+    stroke-width: 2px;
+    marker-end: url(#arrowhead); /* 添加箭头 */
+}
+
+/* 算法画布背景 */
+#algorithm-canvas {
+    background-color: #f8f9fa;
+}
+
+/* 数据状态框样式 */
+.data-status-box {
+    background: #fff;
+    min-height: 160px;
+}
+
+#data-status {
+    font-size: 0.85rem;
+}
+
+#data-status p {
+    margin: 2px 0;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+#data-status .step {
+    background-color: #e9ecef;
+}
+
+#pause-algorithm {
+    transition: all 0.2s ease;
+}
+
+#pause-algorithm.paused {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.module-text {
+    pointer-events: none; /* 确保文字不会阻挡鼠标事件 */
+}
+
+/* 模块默认样式 */
+.draggable-module {
+    transition: none; /* 移除平滑过渡效果 */
+    cursor: grab; /* 鼠标悬浮时显示为抓取手型 */
+}
+
+.draggable-module:active {
+    cursor: grabbing; /* 鼠标按下时显示为抓取状态 */
+}

@@ -1,77 +1,37 @@
-# crypto-v
+Crypto_VIZ
+======
 
-## 项目概述
-`crypto-v` 是一个基于 Flask 的网络应用，旨在提供一个用户友好的界面，用于加密货币相关的功能。该项目结构清晰，便于导航和维护。
+此项目是一个基于 Flask 框架的 Web 应用程序，包含用户认证、博客文章、评论、关注系统等功能。项目代码来源于我的 O'Reilly 出版的书籍 [Flask Web 开发](http://www.flaskbook.com) 第二版。
 
-## 目录结构
-```
-crypto-v
-├── app
-│   ├── __init__.py
-│   ├── routes.py
-│   ├── models.py
-│   ├── forms.py
-│   ├── templates
-│   │   ├── base.html
-│   │   ├── index.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── user_management.html
-│   │   ├── group_management.html
-│   │   ├── algorithm_display.html
-│   │   └── password_evaluation.html
-│   └── static
-│       ├── css
-│       │   └── style.css
-│       └── js
-│           └── script.js
-├── migrations
-├── venv
-├── config.py
-├── requirements.txt
-└── README.md
-```
-## 目录功能介绍
-- `app/__init__.py`: 初始化 Flask 应用及其扩展。
-- `app/routes.py`: 定义应用的路由和视图函数。
-- `app/models.py`: 定义数据库模型。
-- `app/forms.py`: 定义表单类。
-- `app/templates/`: 存放 HTML 模板文件。
-  - `base.html`: 基础模板，其他模板继承自此模板。
-  - `index.html`: 首页模板。
-  - `login.html`: 登录页面模板。
-  - `register.html`: 注册页面模板。
-  - `user_management.html`: 用户管理页面模板。
-  - `group_management.html`: 群组管理页面模板。
-  - `algorithm_display.html`: 算法展示页面模板。
-  - `password_evaluation.html`: 密码评估页面模板。
-- `app/static/`: 存放静态文件（CSS、JavaScript 等）。
-  - `css/style.css`: CSS 样式文件。
-  - `js/script.js`: JavaScript 脚本文件。
-- `migrations/`: 存放数据库迁移文件。
-- `venv/`: 虚拟环境目录。
-- `config.py`: 配置文件。
-- `requirements.txt`: 列出项目依赖的 Python 包。
-- `README.md`: 项目说明文件。
+### 项目目录结构
+flasky/ │ ├── app/ # 应用程序模块 
+        │ ├── templates/ # HTML 模板文件 
+        │ ├── static/ # 静态文件（CSS、JS、图片等） 
+        │ ├── models.py # 数据库模型定义 
+        │ ├── views.py # 视图函数 
+        │ └── init.py # 应用初始化 
+        │ ├── migrations/ # 数据库迁移脚本 
+        │ ├── tests/ # 单元测试 
+        │ ├── test_api.py # API 测试 
+        │ ├── test_client.py # 客户端测试 
+        │ └── test_user_model.py # 用户模型测试 
+        │ ├── config.py # 配置文件 
+        ├── flasky.py # 应用程序入口 
+        └── requirements.txt # 项目依赖
 
-## 使用
-1. 设置 Flask 的环境变量：
-- 在 Windows 上：
-  ```
-  set FLASK_APP=app
-  ```
-- 在 macOS/Linux 上：
-  ```
-  export FLASK_APP=app
-  ```
-2. 运行应用：
+### 功能介绍
+
+1. **用户认证**：支持用户注册、登录、登出、邮箱验证、密码重置等功能。
+2. **博客系统**：用户可以发布、编辑和删除文章。
+3. **评论系统**：支持文章评论功能，用户可以对文章发表评论。
+4. **关注系统**：用户可以关注其他用户，并查看关注者的文章。
+5. **管理员功能**：管理员可以管理用户和评论。
+
+### 如何运行项目
+
+1. 克隆项目到本地：
+   ```bash
+   git clone https://github.com/your-repo/flasky.git
+   cd flasky
    ```
-   flask run
-   ```
-3. 打开浏览器并访问 `http://127.0.0.1:5000` 以访问应用。
 
-## 贡献
-欢迎贡献！请通过提交 issue 或 pull request 来提出任何增强功能或错误修复。
-
-## 许可证
-该项目使用 MIT 许可证。详情请参阅 LICENSE 文件。
