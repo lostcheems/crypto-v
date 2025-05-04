@@ -28,10 +28,9 @@ flasky/ │ ├── app/ # 应用程序模块
 5. **管理员功能**：管理员可以管理用户和评论。
 
 ### 如何运行项目
+初始化数据库：flask db init
+生成迁移脚本：flask db migrate -m "message"
+更新数据库：flask db upgrade
 
-1. 克隆项目到本地：
-   ```bash
-   git clone https://github.com/your-repo/flasky.git
-   cd flasky
-   ```
-
+设置环境变量：$env:FLASK_APP="crypto_viz.py"
+运行项目：flask run
