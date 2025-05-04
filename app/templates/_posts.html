@@ -1,3 +1,4 @@
+<!-- crypto-v/app/templates/_posts.html -->
 <ul class="posts">
     {% for post in posts %}
     <li class="post">
@@ -7,7 +8,8 @@
                     <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
                 </a>
             {% else %}
-                <img class="img-rounded profile-thumbnail" src="default_image_url" alt="未找到作者信息">
+                <!-- 使用在线默认图片 URL -->
+                <img class="img-rounded profile-thumbnail" src="https://picsum.photos/40" alt="未找到作者信息">
             {% endif %}
         </div>
         <div class="post-content">
@@ -43,4 +45,4 @@
         </div>
     </li>
     {% endfor %}
-</ul>    
+</ul>

@@ -59,6 +59,7 @@ def index():
 
 
 @main.route('/user/<username>')
+@login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
@@ -230,6 +231,7 @@ def show_followed():
 
 
 @main.route('/algorithm-visualization')
+@login_required
 def algorithm_visualization():
     return render_template('algorithm_visualization.html')
 
@@ -251,6 +253,7 @@ def edit_post():
   
 # 删除 post 视图函数中的评论提交逻辑
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
+@login_required
 def post(id):
     post = Post.query.get_or_404(id)
     # 移除评论表单和提交逻辑
