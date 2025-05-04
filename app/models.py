@@ -292,7 +292,6 @@ class Post(db.Model):
     title = db.Column(db.String(128))  # 添加标题字段
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
-    image_url = db.Column(db.String(256))  # 添加图片 URL 字段
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   
@@ -314,8 +313,7 @@ class Post(db.Model):
             'image_url': self.image_url,  # 添加图片 URL 字段到 JSON
             'timestamp': self.timestamp,
             'author_url': url_for('api.get_user', id=self.author_id),
-            'comments_url': url_for('api.get_post_comments', id=self.id),
-            'comment_count': self.comments.count()
+            
         }
         return json_post
 

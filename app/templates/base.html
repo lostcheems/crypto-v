@@ -24,8 +24,9 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('main.index') }}">首页</a></li>
-                <li><a href="{{ url_for('main.algorithm_visualization') }}">算法可视化</a></li>
                 {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('.edit_post') }}">编辑文章</a></li>
+                <li><a href="{{ url_for('main.algorithm_visualization') }}">算法可视化</a></li>
                 <li><a href="{{ url_for('main.user', username=current_user.username) }}">个人资料</a></li>
                 {% endif %}
             </ul>

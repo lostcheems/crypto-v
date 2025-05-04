@@ -2,6 +2,9 @@ from flask import render_template, redirect, url_for, abort, flash, request,\
     current_app, make_response
 from flask_login import login_required, current_user
 from flask_sqlalchemy import get_debug_queries
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm
 from .. import db
@@ -18,7 +21,6 @@ def after_request(response):
                 % (query.statement, query.parameters, query.duration,
                    query.context))
     return response
-
 
 @main.route('/shutdown')
 def server_shutdown():
@@ -231,31 +233,26 @@ def show_followed():
 def algorithm_visualization():
     return render_template('algorithm_visualization.html')
 
-@main.route('/edit-post/<int:id>', methods=['GET', 'POST'])
+class PostForm(FlaskForm):
+    title = StringField('标题', validators=[DataRequired()])
+    body = TextAreaField('内容', validators=[DataRequired()])
+    submit = SubmitField('发布')
+
+@main.route('/edit-post', methods=['GET', 'POST'])
 @login_required
-def edit_post(id):
-    post = Post.query.get_or_404(id)
-    if current_user != post.author and not current_user.can(Permission.ADMIN):
-        abort(403)
+def edit_post():
     form = PostForm()
     if form.validate_on_submit():
-        post.title = form.title.data
-        post.image_url = form.image_url.data
-        post.body = form.body.data
-        if form.submit_preview.data:
-            flash('预览模式：文章未保存。')
-            return render_template('edit_post.html', form=form, post=post, preview=True)
-        elif form.submit_save.data:
-            db.session.add(post)
-            db.session.commit()
-            flash('文章已保存。')
-            return redirect(url_for('.edit_post', id=post.id))
-        elif form.submit_publish.data:
-            db.session.add(post)
-            db.session.commit()
-            flash('文章已发布。')
-            return redirect(url_for('.post', id=post.id))
-    form.title.data = post.title
-    form.image_url.data = post.image_url
-    form.body.data = post.body
-    return render_template('edit_post.html', form=form, post=post)
+        post = Post(title=form.title.data, body=form.body.data)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('.index'))
+    return render_template('edit_post.html', form=form)
+  
+# 删除 post 视图函数中的评论提交逻辑
+@main.route('/post/<int:id>', methods=['GET', 'POST'])
+def post(id):
+    post = Post.query.get_or_404(id)
+    # 移除评论表单和提交逻辑
+    page = request.args.get('page', 1, type=int)
+    return render_template('post.html', posts=[post])
