@@ -57,8 +57,3 @@ class PostForm(FlaskForm):
     submit_preview = SubmitField('预览')  # 添加预览按钮
     submit_save = SubmitField('保存')  # 添加保存按钮
     submit_publish = SubmitField('发布')  # 添加发布按钮
-
-
-class CommentForm(FlaskForm):
-    body = StringField('输入你的评论', validators=[DataRequired()])
-    submit = SubmitField('提交')
